@@ -1,0 +1,69 @@
+
+# # redis - helm installation
+# helm repo add bitnami https://charts.bitnami.com/bitnami
+# helm repo update
+# kubectl create namespace redis
+# helm install my-redis bitnami/redis \
+  # --namespace redis \
+  # --values values.yaml
+# kubectl get secret --namespace redis my-redis -o jsonpath="{.data.redis-password}" | base64 --decode
+# # Port forward the Redis service
+# kubectl port-forward --namespace redis svc/my-redis-master 6379:6379
+
+# # Connect using redis-cli (replace PASSWORD with actual password)
+# redis-cli -a PASSWORD
+# # Upgrade Redis with new values
+# helm upgrade my-redis bitnami/redis -n redis -f values.yaml
+
+# # Uninstall Redis
+# helm uninstall my-redis -n redis
+
+# # List Redis releases
+# helm list -n redis
+
+# # Get Redis status
+# helm status my-redis -n redis# values.yaml
+
+
+# First clear any existing port-forwards
+# pkill -f 'port-forward'
+
+# # Then set up the port-forward properly
+# kubectl port-forward --namespace redis svc/my-redis-master 6379:6379 &
+
+# # Now connect with password
+# redis-cli -h 127.0.0.1 -p 6379 -a "$REDIS_PASSWORD"
+
+# values.yaml
+architecture: standalone
+
+auth:
+  enabled: true
+  password: "passgili"
+
+master:
+  persistence:
+    enabled: true
+    size: 10Gi
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 500Mi
+      cpu: 250m
+
+metrics:
+  enabled: true
+
+service:
+  type: ClusterIP
+  port: 6379
+
+# If you want Redis Cluster instead of standalone:
+# architecture: replication
+# replica:
+#   replicaCount: 3
+#   persistence:
+#     enabled: true
+#     size: 10Gi

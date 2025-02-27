@@ -1,0 +1,86 @@
+# templates/admin/edit_ice_cream.html
+{% extends "base.html" %}
+
+{% block title %}Edit Ice Cream{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Edit Ice Cream</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="name" 
+                               name="name" 
+                               value="{{ ice_cream.name }}" 
+                               required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" 
+                                  id="description" 
+                                  name="description" 
+                                  rows="3" 
+                                  required>{{ ice_cream.description }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price ($)</label>
+                        <input type="number" 
+                               class="form-control" 
+                               id="price" 
+                               name="price" 
+                               step="0.01" 
+                               min="0" 
+                               value="{{ "%.2f"|format(ice_cream.price) }}" 
+                               required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" 
+                               class="form-control" 
+                               id="stock" 
+                               name="stock" 
+                               min="0" 
+                               value="{{ ice_cream.stock }}" 
+                               required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Ice Cream</button>
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+# Update the dashboard template to include delete modals
+# Add this at the end of templates/admin/dashboard.html, just before the closing {% endblock %}
+
+{% for ice_cream in ice_creams %}
+<!-- Delete Modal for each ice cream -->
+<div class="modal fade" id="deleteModal{{ ice_cream.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ ice_cream.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ ice_cream.id }}">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong>{{ ice_cream.name }}</strong>? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="{{ url_for('delete_ice_cream', id=ice_cream.id) }}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

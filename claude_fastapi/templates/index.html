@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Menu - Ice Cream Shop{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Our Ice Cream Menu</h1>
+
+<form method="post" action="{{ url_for('place_order') }}">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for ice_cream in ice_creams %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ice_cream.name }}</h5>
+                    <p class="card-text">{{ ice_cream.description }}</p>
+                    <p class="card-text">
+                        <strong>Price:</strong> ${{ "%.2f"|format(ice_cream.price) }}<br>
+                        <strong>Available:</strong> {{ ice_cream.stock }}
+                    </p>
+                    {% if current_user.is_authenticated and ice_cream.stock > 0 %}
+                    <div class="input-group">
+                        <input type="number" 
+                               name="quantity_{{ ice_cream.id }}" 
+                               class="form-control" 
+                               value="0" 
+                               min="0" 
+                               max="{{ ice_cream.stock }}">
+                        <span class="input-group-text">scoops</span>
+                    </div>
+                    {% elif ice_cream.stock <= 0 %}
+                    <p class="text-danger">Out of stock</p>
+                    {% else %}
+                    <p class="text-info">Please login to order</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if current_user.is_authenticated and ice_creams %}
+    <button type="submit" class="btn btn-primary mt-4">Place Order</button>
+    {% endif %}
+</form>
+{% endblock %}

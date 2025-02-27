@@ -1,0 +1,71 @@
+# helm repo add bitnami https://charts.bitnami.com/bitnami
+# helm repo update
+# kubectl create namespace postgresqldb
+# helm install postgresql bitnami/postgresql \
+#   --namespace postgresqldb \
+#   --values postgres-values.yaml \
+#   --version 12.5.6
+# kubectl get pods -n postgresqldb -w
+# export POSTGRES_PASSWORD=$(kubectl get secret --namespace postgresqldb postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+# echo $POSTGRES_PASSWORD
+# # Port forward the PostgreSQL service
+# kubectl port-forward --namespace postgresqldb svc/postgresql 5432:5432
+
+# # In another terminal, connect using psql
+# PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d app_database -p 5432
+
+
+# values.yaml
+global:
+  postgresql:
+    auth:
+      postgresPassword: "your-secure-password"
+      username: "app_user"
+      password: "app-user-password"
+      database: "app_database"
+
+primary:
+  persistence:
+    enabled: true
+    size: 10Gi
+    
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+  service:
+    type: ClusterIP
+    port: 5432
+
+  pgHbaConfiguration: |
+    local all all trust
+    host all all 127.0.0.1/32 trust
+    host all all ::1/128 trust
+    host all all all md5
+
+  networkPolicy:
+    enabled: true
+    ingressRules:
+      primaryAccessOnlyFrom:
+        enabled: true
+        namespaceSelector: {}
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: your-application
+
+backup:
+  enabled: true
+  cronjob:
+    schedule: "0 0 * * *"
+  persistence:
+    enabled: true
+    size: 5Gi
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: false

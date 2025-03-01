@@ -1,0 +1,73 @@
+<div class="container mx-auto px-4 py-8">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title text-3xl">Menu Management</h1>
+                <p class="card-description">Add and manage ice cream items</p>
+            </div>
+            
+            <div class="card-content">
+                <!-- Add New Ice Cream Form -->
+                <div class="card mb-8">
+                    <div class="card-header">
+                        <h2 class="card-title text-xl">Add New Ice Cream</h2>
+                    </div>
+                    <div class="card-content">
+                        <form action="/admin/icecream" method="POST" enctype="multipart/form-data">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium">Name:</label>
+                                    <input type="text" name="name" required class="input">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium">Description:</label>
+                                    <textarea name="description" required class="input h-24"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium">Price:</label>
+                                    <input type="number" name="price" step="0.01" required class="input">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium">Image:</label>
+                                    <input type="file" name="image" required class="input">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Ice Cream</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Existing Ice Creams -->
+                <div class="space-y-4">
+                    {% for icecream in icecreams %}
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="flex items-center gap-4">
+                                <img src="{{ icecream.image_url }}" alt="{{ icecream.name }}" 
+                                     class="w-24 h-24 object-cover rounded">
+                                <div class="flex-grow">
+                                    <h3 class="text-xl font-bold">{{ icecream.name }}</h3>
+                                    <p class="text-gray-600">{{ icecream.description }}</p>
+                                    <p class="text-lg font-bold">${{ "%.2f"|format(icecream.price) }}</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <form action="/admin/icecream/{{ icecream.id }}" method="POST">
+                                        <input type="hidden" name="is_available" 
+                                               value="{{ not icecream.is_available }}">
+                                        <button type="submit" class="btn btn-secondary">
+                                            {{ "Disable" if icecream.is_available else "Enable" }}
+                                        </button>
+                                    </form>
+                                    <button class="btn btn-primary" onclick="editIceCream({{ icecream.id }})">
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    

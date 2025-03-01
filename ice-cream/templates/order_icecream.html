@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Our Ice Cream Menu</h1>
+
+<div class="ice-cream-form">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title text-2xl font-bold">Order Your Ice Cream</h2>
+            <p class="card-description text-gray-500">Customize your perfect ice cream treat</p>
+        </div>
+        
+        <div class="card-content">
+            <!-- Price calculation form -->
+            <form action="/calculate-price" method="POST">
+                <div class="space-y-4">
+                    <div class="form-group">
+                        <label for="flavor" class="text-sm font-medium">Choose your flavor:</label>
+                        <select id="flavor" name="flavor" required class="select w-full">
+                            {% for flavor in flavors %}
+                            <option value="{{ flavor }}" {% if flavor == selected_flavor %}selected{% endif %}>
+                                {{ flavor }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scoops" class="text-sm font-medium">Number of scoops (1-3):</label>
+                        <input type="number" id="scoops" name="scoops" min="1" max="3" 
+                               value="{{ selected_scoops }}" required class="input w-full">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-sm font-medium">Toppings (choose up to 3):</label>
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            {% for topping in toppings %}
+                            <div class="topping-option flex items-center">
+                                <input type="checkbox" name="toppings" value="{{ topping }}" 
+                                       id="{{ topping }}" {% if topping in selected_toppings %}checked{% endif %}
+                                       class="checkbox">
+                                <label for="{{ topping }}" class="ml-2">{{ topping }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full">Calculate Price</button>
+                </div>
+            </form>
+
+            <div class="divider"></div>
+
+            <div class="order-summary">
+                <h3 class="text-lg font-semibold mb-2">Order Summary</h3>
+                <div class="space-y-2">
+                    <p>Base price: $3.00 per scoop</p>
+                    <p>Toppings: $0.50 each</p>
+                    <p class="text-xl font-bold">Total: ${{ total_price }}</p>
+                </div>
+            </div>
+
+            <!-- Final order submission -->
+            {% if total_price != "0.00" %}
+            <form action="/submit-order" method="POST" class="mt-4">
+                <input type="hidden" name="flavor" value="{{ selected_flavor }}">
+                <input type="hidden" name="scoops" value="{{ selected_scoops }}">
+                {% for topping in selected_toppings %}
+                <input type="hidden" name="toppings" value="{{ topping }}">
+                {% endfor %}
+                <input type="hidden" name="user_id" value="1">
+                <button type="submit" class="btn btn-success w-full">Place Order</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

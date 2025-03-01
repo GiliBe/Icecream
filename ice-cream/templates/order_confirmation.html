@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="form-container">
+        <h2>Order Confirmation</h2>
+        <div class="order-details">
+            <h3>Order #{{ order.id }}</h3>
+            <p><strong>Flavor:</strong> {{ order.flavor }}</p>
+            <p><strong>Scoops:</strong> {{ order.scoops }}</p>
+            <p><strong>Toppings:</strong> {{ order.toppings.split(',') | join(', ') if order.toppings else 'None' }}</p>
+            <p><strong>Total Price:</strong> ${{ "%.2f" | format(order.total_price) }}</p>
+        </div>
+        <a href="/order" class="btn">Place Another Order</a>
+    </div>
+
+{% endblock %}

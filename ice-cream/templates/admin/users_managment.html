@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Ice Cream Shop{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Add New User</h5>
+            </div>
+            <div class="card-body">
+                <form action="/admin/user" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <div>
+                            <label class="block text-sm font-medium">Role</label>
+                            <select name="role" class="form-select mb-2">
+                                <option value="admin"> Admin</option>
+                                <option value="customer"> Customer</option>
+                                <option value="staff"> Staff</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+                <h1 class="card-title text-3xl">Users Management</h1>
+                <p class="card-description">Add and manage Users</p>
+            </div>
+                <!-- Existing Users -->
+                <div class="space-y-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Admin</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        {% for user in users %}
+                                    <tr>
+                                        <td>#{{ user.id }}</td>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.role }}</td>
+                                        <td>
+                                            <form action="/admin/user/{{ user.username }}" method="POST">
+                                                <input type="hidden" name="is_admin" value="{{ not user.is_admin }}">
+                                                {% if user.is_admin %}
+                                                <button type="submit" class="btn btn-secondary px-3 py-1 rounded"> Disable </button>
+                                                {% else %}
+                                                <button type="submit" class="btn btn-primary px-3 py-1 rounded"> Enable </button>
+                                                {% endif %}
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form method="POST" >
+                                                <button type="submit" class="btn btn-danger px-3 py-1 rounded">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                        </td>            
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                    
+                </div>               
+</div>
+
+    
+{% endblock %}
+
+

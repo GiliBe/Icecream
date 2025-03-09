@@ -10,6 +10,7 @@ class IceCream(Base):
     description = Column(String)
     price = Column(Float)
     image_url = Column(String)
+    stock = Column(Integer, default=0)
     is_available = Column(Boolean, default=True)
     
     # # Relationship with orders

@@ -12,6 +12,11 @@
             </div>
             <div class="card-body">
                 <form method="post">
+                    {% if error_message %}
+                    <div class="error-message" style="color: red; margin-bottom: 15px;">
+                        {{ error_message }}
+                    </div>
+                    {% endif %}
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" required>
@@ -25,7 +30,7 @@
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>
-                    <a href="{{ url_for('login') }}" class="btn btn-link">Don't have an account? Register</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-link">Don't have an account? Register</a>
                 </form>
             </div>
         </div>

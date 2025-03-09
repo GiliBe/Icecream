@@ -7,12 +7,12 @@
     <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Add New IceCream</h5>
+                <h5 class="mb-0">Add New IceCreame</h5>
             </div>
             <div class="card-body">
-                <form action="/admin/icecream/edit" method="POST" enctype="multipart/form-data">
+                <form action="/admin/icecream" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label class="form-label">IceCream Name:</label>
+                        <label class="form-label">IceCreame Name:</label>
                         <input type="text" name="name" required class="form-control">
                     </div>
                     <div>
@@ -22,10 +22,6 @@
                     <div class="mb-3">
                         <label class="form-label">Price:</label>
                         <input type="number" name="price" step="0.01" required class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Stock:</label>
-                        <input type="number" name="stock" step="1" required class="form-control">
                     </div>
                     <div class="mb-3">
                         <label class="block text-sm font-medium">Image:</label>
@@ -50,24 +46,20 @@
                                 <thead>
                                     <tr>
                                         <th>Id</th>
-                                        <th>Icecream Name</th>
+                                        <th>IcecreamName</th>
                                         <th>Description</th>
                                         <th>Price</th>
-                                        <th>Stock</th>
-                                        <th>Image</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for icecream in icecreams %}
+                                        {% for icecream in icecreams %}
                                     <tr>
                                         <td>#{{ icecream.id }}</td>
                                         <td>{{ icecream.name }}</td>
-                                        <td>{{ icecream.description }}</td>
                                         <td>{{ icecream.price }}</td>
-                                        <td>{{ icecream.stock }}</td>
                                         <td>{{ icecream.image }}</td>
                                         <td>
-                                            <form action="/admin/icecream/edit/{{ icecream.id }}" method="POST">
+                                            <form action="/admin/icecream/{{ icecream.id }}" method="POST">
                                                 <button type="submit" class="btn btn-secondary px-3 py-1 rounded"> Disable </button>
                                                 <button type="submit" class="btn btn-primary px-3 py-1 rounded"> Enable </button>
                                             </form>

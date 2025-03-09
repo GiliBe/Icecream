@@ -19,4 +19,5 @@ class User(Base):
     role = Column(String, default="customer")
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
-    orders = relationship("Order", back_populates="user")
+    token = Column(String, default=None)
+    orders = relationship("Order", back_populates="user",foreign_keys="[Order.user_id]")

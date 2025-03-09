@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Menu - Ice Cream Shop{% endblock %}
+
+{% block content %}
+
+<div class="container mx-auto px-4 py-8">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title text-3xl">Ice Cream Menu</h1>
+                <p class="card-description">Choose from our delicious selection</p>
+            </div>
+</div>
+
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    {% for icecream in icecreams %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ icecream.name }}</h5>
+                                <p class="card-text">{{ icecream.description }}</p>
+                                <p class="card-text">
+                                    <strong>Price:</strong> ${{ "%.2f"|format(icecream.price) }}<br>
+                                </p>
+                                <form action="/add-to-cart" method="POST" class="mt-4">
+                                    <input type="hidden" name="icecream_id" value="{{ icecream.id }}">
+                                    <div class="input-group">
+                                        <input type="number" 
+                                               name="quantity" 
+                                               class="form-control" 
+                                               value="1" 
+                                               min="1" 
+                                               max="10">
+                                        <span class="input-group-text">scoops</span>
+                                    </div>
+                                    <p class="text-danger">Out of stock</p>
+                                    <p class="text-info">Please login to order</p>
+    
+                                    <div class="flex items-center gap-2">
+                                        <button type="submit" class="btn btn-primary flex-grow">
+                                            Add to Cart
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+        </div>
+    {% endblock %}

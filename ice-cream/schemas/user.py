@@ -23,3 +23,7 @@ class User(UserBase):
     class Config:
         from_attributes = True
 
+class Token(BaseModel):
+    username: str
+    token: str
+
